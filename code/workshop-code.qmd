@@ -414,11 +414,58 @@ Rename the `x` column and `group` column to match the original data frame (`drou
 
 Look at the object before plotting.
 
+```{r}
+#| label: model-predictions
+
+preds <- ggpredict(
+  model4,#model object
+  terms = c("water_treatment", "species_name") #predictors
+) |> 
+  #renaming columns to original data frame
+  rename(water_treatment = x,
+         species_name = group)
+```
 
 
 # 5. Final figure
 
 Create a clean, publication ready figure depicting predictions for the best model and the underlying data.
+
+```{r}
+#| label: final-figure
+#base layer: ggplot
+ggplot(data = drought_exp_clean,
+       #x-axis: treatment
+       #y-axis: plant mass
+       #color by water treatment
+       mapping = aes(x = water_treatment,
+                     y = total_g,
+                     color = water_treatment)) +
+  #jitter: represents individual plants for each treatment in each species
+  geom_jitter(height = 0,
+              width = 0.1,
+              alpha = 0.4,
+              shape = 21) +
+  #model predictions with 95% CI
+  geom_pointrange(data = preds,
+                  mapping = aes(x = water_treatment,
+                                y = predicted,
+                                ymin = conf.low,
+                                ymax = conf.high)) +
+  #creates different panels for each species
+facet_wrap(~ species_name) +
+  #adds custom colors
+  scale_color_manual(values = c(
+    "Drought stressed" = ds_col,
+    "Well Watered" = ww_col
+  )) +
+  #removes legens
+  theme(legend.position = "none") +
+  #relabel axes
+  labs(x = "Treatment",
+       y = "Total plant mass(g)")
+```
+
 
 
 # 6. Writing
