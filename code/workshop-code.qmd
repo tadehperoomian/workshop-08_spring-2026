@@ -158,6 +158,23 @@ Label the axes with units where appropriate.
 Add a title describing the relationship (e.g. as SLA increases, total mass ______). 
 
 
+```{r}
+#| label: scatter-plot
+#base layer: ggplot
+ggplot(data = drought_exp_clean,
+       mapping = aes(
+         #x-axis: specific leaf area
+         #y-axis: total plant mass
+       x = sla,
+       y = total_g)) +
+  #scatter plot
+  geom_point() +
+  labs(x = expression("Specific Leaf Area (cm"^2~"/g)"),
+       y = "Total Mass(g)",
+       title = "As SLA Increases, Total Mass Increases"
+       )
+
+```
 
 
 
@@ -169,9 +186,30 @@ Label the axes with units where appropriate.
 
 Add a title describing the differences in (mean or median) plant mass between water treatments.
 
-
-
-
+```{r}
+#| label: jitter-water
+#base layer: ggplot
+ggplot(data = drought_exp_clean,
+       #x-axis: water treatment
+       #y-axis: total plant mass
+       mapping = aes(x = water_treatment,
+                     y = total_g,
+                     color = water_treatment)) +
+  #jitter plot
+  geom_jitter(height = 0,
+              width = 0.2) +
+  #changing colors
+  scale_color_manual(values = c(
+    "Drought stressed" = ds_col,
+    "Well watered" = ww_col
+  )) +
+  #relabeling
+  labs(x = "Water Treatment Type",
+       y = "Total Plant Mass(g)",
+       title = "Well Watered Plants tend to have more mass than Drought Stressed") +
+  #removing legend
+  theme(legend.position = "none")
+```
 
 
 
@@ -186,6 +224,40 @@ Add a title describing the differences in (mean or median) plant mass between sp
 Bonus: order the x-axis by decreasing mean plant mass.
 
 
+```{r}
+#| label: jitter-species
+#base layer: ggplot
+ggplot(data = drought_exp_clean,
+       #x-axis: species
+       #y-axis: plant mass
+       #coloring by species
+       mapping = aes(x = species_name,
+                     y = total_g,
+                     color = species_name)) +
+  #jitterplot
+  geom_jitter(height = 0,
+              width = 0.2) +
+  #wrapping x-axis text
+  scale_x_discrete(labels = label_wrap(10)) +
+  #relabelling axes
+  labs(x = "Species Name",
+       y = "Total Plant Mass(grams)",
+       title = "Species differ in plant mass") +
+  #using custom colors
+  scale_color_manual(
+    values = c(
+      "Lotus scoparius" = lotsco_col,
+      "Penstemon centranthifolius" = pencen_col,
+      "Salvia leucophylla" = salleu_col,
+      "Encelia californica" = enccal_col,
+      "Stipa pulchra" = stipul_col,
+      "Eschscholzia californica" = esccal_col,
+      "Grindelia camporum" = gricam_col
+    )
+  ) +
+  #removing legend
+  theme(legend.position = "none")
+```
 
 
 
