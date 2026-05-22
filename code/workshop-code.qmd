@@ -71,7 +71,8 @@ ds_col <- "#A62F03"
 ww_col <- "#045CB4"
 
 # storing a ggplot theme (that will be used for all ggplots)
-theme_set(theme_bw())
+theme_set(theme_bw() +
+            theme(text = element_text(size = 14)))
 ```
 
 
